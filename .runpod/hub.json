@@ -1,0 +1,58 @@
+{
+  "title": "VibeVoice Realtime TTS",
+  "description": "Low-latency expressive text-to-speech using microsoft/VibeVoice-Realtime-0.5B. Weights and 26 multilingual voice presets are baked into the image, so there is no cold-start download.",
+  "type": "serverless",
+  "category": "audio",
+  "config": {
+    "runsOn": "GPU",
+    "containerDiskInGb": 25,
+    "presets": [
+      {
+        "name": "English female (Emma)",
+        "defaults": { "DEFAULT_VOICE": "en-Emma_woman", "CFG_SCALE": "1.5" }
+      },
+      {
+        "name": "English male (Carter)",
+        "defaults": { "DEFAULT_VOICE": "en-Carter_man", "CFG_SCALE": "1.5" }
+      }
+    ],
+    "env": [
+      {
+        "key": "DEFAULT_VOICE",
+        "input": {
+          "name": "Default voice preset",
+          "type": "string",
+          "description": "Voice used when a request omits the 'voice' field.",
+          "default": "en-Emma_woman"
+        }
+      },
+      {
+        "key": "CFG_SCALE",
+        "input": {
+          "name": "CFG scale",
+          "type": "string",
+          "description": "Classifier-free guidance strength. Upstream default is 1.5.",
+          "default": "1.5"
+        }
+      },
+      {
+        "key": "DDPM_STEPS",
+        "input": {
+          "name": "Diffusion steps",
+          "type": "string",
+          "description": "Diffusion steps per chunk. Higher is slower and smoother. Upstream default is 5.",
+          "default": "5"
+        }
+      },
+      {
+        "key": "ATTN_IMPL",
+        "input": {
+          "name": "Attention implementation",
+          "type": "string",
+          "description": "sdpa needs no extra wheel. flash_attention_2 is fully tested upstream but must be installed into the image first.",
+          "default": "sdpa"
+        }
+      }
+    ]
+  }
+}

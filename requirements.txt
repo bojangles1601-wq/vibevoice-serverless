@@ -1,0 +1,15 @@
+# Exact pin required by upstream's streamingtts extra.
+transformers==4.51.3
+accelerate
+diffusers
+numpy<2
+scipy
+librosa
+numba>=0.57.0
+llvmlite>=0.40.0
+ml-collections
+absl-py
+tqdm
+soundfile
+huggingface-hub
+runpod

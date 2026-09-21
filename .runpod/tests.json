@@ -1,0 +1,32 @@
+{
+  "tests": [
+    {
+      "name": "short_english_default_voice",
+      "input": { "text": "Hello. This worker is online and speaking." },
+      "timeout": 180000
+    },
+    {
+      "name": "named_voice_and_cfg",
+      "input": {
+        "text": "The second request must sound the same as the first.",
+        "voice": "en-Carter_man",
+        "cfg_scale": 1.5
+      },
+      "timeout": 180000
+    },
+    {
+      "name": "rejects_empty_text",
+      "input": { "text": "" },
+      "timeout": 180000
+    }
+  ],
+  "config": {
+    "gpuTypeId": "NVIDIA GeForce RTX 4090",
+    "gpuCount": 1,
+    "env": [
+      { "key": "DEFAULT_VOICE", "value": "en-Emma_woman" },
+      { "key": "ATTN_IMPL", "value": "sdpa" }
+    ],
+    "allowedCudaVersions": ["12.8", "12.7", "12.6", "12.5", "12.4"]
+  }
+}
