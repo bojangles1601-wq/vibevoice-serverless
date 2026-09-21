@@ -18,7 +18,7 @@ That guard exists because the published `jords1755/VibeVoice` Hub listing fails
 exactly there, at container start, on an import of a module that does not exist.
 This build fails at build time instead of on a paying request.
 
-Image size: 7.61 GB. Weights and 26 voice presets are baked in.
+Image size: 7.61 GB. Weights and 25 voice presets are baked in.
 
 ## `test_two_requests.py` — PASSED
 

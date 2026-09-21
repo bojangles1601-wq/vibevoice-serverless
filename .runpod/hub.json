@@ -1,6 +1,6 @@
 {
   "title": "VibeVoice Realtime TTS",
-  "description": "Low-latency expressive text-to-speech using microsoft/VibeVoice-Realtime-0.5B. Weights and 26 multilingual voice presets are baked into the image, so there is no cold-start download.",
+  "description": "Low-latency expressive text-to-speech using microsoft/VibeVoice-Realtime-0.5B. Weights and 25 multilingual voice presets are baked into the image, so there is no cold-start download.",
   "type": "serverless",
   "category": "audio",
   "config": {
