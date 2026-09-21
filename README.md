@@ -144,18 +144,40 @@ with weights baked in. See `PROBE_RESULTS.md`.
 
 ## Deploying to RunPod Hub
 
-The repository already exists and release `v1.0.0` is already cut. The Hub
-indexes releases, not commits, and it needs a public repository.
+The repository is public and release `v1.0.0` is cut. The Hub indexes releases,
+not commits, and it cannot read a private repository.
 
-Two steps remain, both Joel's:
+⚠ **The Hub does not discover repositories on its own.** A public repo with a
+release will never appear by itself. It has to be submitted.
+
+1. Open the Hub console at `https://www.console.runpod.io/hub`.
+2. Under **Add your repo**, click **Get Started**.
+3. Give it this repository's URL and follow the steps.
+
+The repo then sits at **Pending** while RunPod builds the image and runs
+`.runpod/tests.json`. After the tests pass, **a RunPod person reviews it by hand
+before it is published.** RunPod does not document how long that takes, so a
+listing that has not appeared yet is normal, not broken.
+
+### If the visibility flip does not stick
+
+`gh repo edit --visibility public` needs an interactive confirmation, and the
+GitHub web form makes you retype the repository name. Either can silently leave
+the repo private. This is the non-interactive version, and it is what worked:
 
 ```bash
-gh repo edit bojangles1601-wq/vibevoice-serverless --visibility public
+gh api -X PATCH repos/bojangles1601-wq/vibevoice-serverless -f visibility=public
 ```
 
-Then open the RunPod Hub console, choose "Get Started", and give it the
-repository URL. The listing then builds, runs `.runpod/tests.json`, and goes to
-RunPod for manual review before it appears publicly.
+Check it from outside, with no credentials, rather than trusting the setting:
+
+```bash
+curl -sL -o /dev/null -w "%{http_code}\n" https://github.com/bojangles1601-wq/vibevoice-serverless
+```
+
+`200` means public. `404` means it is still private. The `raw.githubusercontent.com`
+host caches the private-era `404` for around a minute after the flip, so retry
+once before believing it.
 
 ## Attribution
 
