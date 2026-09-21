@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Torch first, so the CUDA build is fixed before anything can pull a
 # different one as a transitive dependency.
+RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel
+
 RUN pip3 install --no-cache-dir --index-url https://download.pytorch.org/whl/cu124 \
         torch==2.6.0 torchaudio==2.6.0
 
@@ -30,7 +32,7 @@ ARG VIBEVOICE_SHA=1541f590c7099820f10ea012f48d2399282df69f
 RUN git clone https://github.com/microsoft/VibeVoice.git /opt/VibeVoice \
     && cd /opt/VibeVoice \
     && git checkout ${VIBEVOICE_SHA} \
-    && pip3 install --no-cache-dir --no-deps -e .
+    && pip3 install --no-cache-dir --no-deps .
 
 # Bake the weights and the voice presets.
 COPY builder/download_assets.py /app/builder/download_assets.py

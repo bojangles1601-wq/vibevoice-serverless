@@ -6,14 +6,29 @@
   "config": {
     "runsOn": "GPU",
     "containerDiskInGb": 25,
+    "gpuIds": "ADA_24",
+    "gpuCount": 1,
+    "allowedCudaVersions": [
+      "12.8",
+      "12.7",
+      "12.6",
+      "12.5",
+      "12.4"
+    ],
     "presets": [
       {
         "name": "English female (Emma)",
-        "defaults": { "DEFAULT_VOICE": "en-Emma_woman", "CFG_SCALE": "1.5" }
+        "defaults": {
+          "DEFAULT_VOICE": "en-Emma_woman",
+          "CFG_SCALE": "1.5"
+        }
       },
       {
         "name": "English male (Carter)",
-        "defaults": { "DEFAULT_VOICE": "en-Carter_man", "CFG_SCALE": "1.5" }
+        "defaults": {
+          "DEFAULT_VOICE": "en-Carter_man",
+          "CFG_SCALE": "1.5"
+        }
       }
     ],
     "env": [
