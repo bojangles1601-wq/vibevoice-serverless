@@ -3,7 +3,7 @@
 Low-latency expressive text-to-speech on RunPod serverless, built on
 [microsoft/VibeVoice](https://github.com/microsoft/VibeVoice).
 
-Model weights and all 26 voice presets are baked into the image. There is no
+Model weights and all 25 voice presets are baked into the image. There is no
 cold-start download.
 
 ---
@@ -83,7 +83,7 @@ The audio is a 24 kHz mono 16-bit WAV. **It is 24 kHz, not 16 kHz.**
 
 ## Voices
 
-26 presets ship in the image, across English, German, French, Italian,
+25 presets ship in the image, across English, German, French, Italian,
 Japanese, Korean, Dutch, Polish, Portuguese, Spanish and Indian English.
 English names are `en-Carter_man`, `en-Davis_man`, `en-Emma_woman`,
 `en-Frank_man`, `en-Grace_woman`, `en-Mike_man`.
@@ -123,20 +123,39 @@ A single-request smoke test cannot catch this class of bug.
 
 ```bash
 docker build -t vibevoice-serverless:dev .
-docker run --rm --gpus all -v /tmp/probe:/tmp vibevoice-serverless:dev \
-    python3 -u test_two_requests.py
 ```
+
+Run one job through the real serverless entry point, the same command the
+container runs in production:
+
+```bash
+docker run --rm --gpus all vibevoice-serverless:dev \
+    python3 -u handler.py --test_input '{"input":{"text":"Hello. This worker is online."}}'
+```
+
+Run the warm-worker probe, which makes two requests against one loaded model:
+
+```bash
+docker run --rm --gpus all vibevoice-serverless:dev python3 -u test_two_requests.py
+```
+
+Measured on an RTX 4070: cold start to first audio is **12 seconds** end to end,
+with weights baked in. See `PROBE_RESULTS.md`.
 
 ## Deploying to RunPod Hub
 
-The Hub builds from a public GitHub repository and a release tag.
+The repository already exists and release `v1.0.0` is already cut. The Hub
+indexes releases, not commits, and it needs a public repository.
+
+Two steps remain, both Joel's:
 
 ```bash
-gh repo create vibevoice-serverless --public --source . --remote origin --push
-gh release create v1.0.0 --title "v1.0.0" --notes "First release."
+gh repo edit bojangles1601-wq/vibevoice-serverless --visibility public
 ```
 
-Then add the repository in the RunPod Hub console.
+Then open the RunPod Hub console, choose "Get Started", and give it the
+repository URL. The listing then builds, runs `.runpod/tests.json`, and goes to
+RunPod for manual review before it appears publicly.
 
 ## Attribution
 

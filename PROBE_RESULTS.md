@@ -53,6 +53,41 @@ monotonically shrinking: False
 around 5 seconds. A state-carryover defect would shrink monotonically. The first
 request being longest is a cold-start artefact, not the start of a slide.
 
+
+## ⭐ The real entry point, which the first probe never exercised
+
+The first probe imported `handler` and called the function directly. That skips
+the `if __name__ == "__main__"` guard, so **`runpod.serverless.start()` had never
+run** — and that line is what the container's `CMD` actually invokes. Checking
+the parts while skipping the entry point is the same mistake the broken listing
+made. So it was run properly:
+
+```
+docker run --rm --gpus all vibevoice-serverless:dev \
+    python3 -u handler.py --test_input '{"input":{"text":"Hello. This worker is online and speaking."}}'
+```
+
+Result, from the RunPod SDK's own log lines:
+
+```
+[vibevoice] model ready, ddpm_steps=5
+[vibevoice] loaded 25 voices
+--- Starting Serverless Worker |  Version 1.12.0 ---
+INFO | Job local_test completed successfully.
+```
+
+Returned payload: 3.867 s of audio, 24000 Hz, real-time factor 0.309.
+
+**Exit code 0. Total wall clock, container start to exit: 12 seconds.**
+
+That 12 seconds is the cold start with weights baked in. Every test in
+`tests.json` allows 180 seconds, so there is a 15x margin for a RunPod host
+slower than this one.
+
+⚠ **One count corrected.** The image loads **25** voice presets, not 26. The
+earlier figure was counted from a file listing that included a `.wav` demo file.
+The running container reports 25, and the running container is the authority.
+
 ## What this does NOT establish
 
 - **Audio quality was not judged.** Nobody has listened. Duration and sample
@@ -63,6 +98,8 @@ request being longest is a cold-start artefact, not the start of a slide.
 - **RunPod's own environment was not used.** This ran on local Docker with the
   NVIDIA runtime. That is the same container, not the same host.
 - **Long inputs were not tested.** The longest text here is one sentence.
+- **GPU memory use was not measured.** It fits on a 12 GB card with the
+  desktop running, but the exact figure is unknown.
 
 ## Falsifier
 

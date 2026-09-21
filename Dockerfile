@@ -39,6 +39,7 @@ COPY builder/download_assets.py /app/builder/download_assets.py
 RUN python3 /app/builder/download_assets.py
 
 COPY handler.py .
+COPY test_two_requests.py .
 
 # Fail the build, not the first paying request, if the import graph is wrong.
 RUN python3 -c "\
